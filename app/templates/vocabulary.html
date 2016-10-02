@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/vocabulary.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Single button -->
+  <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {{ datas[0].file_name }} <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+    {% for data in datas %}
+      <li class="data-select" data-val="{{ data.id }}"><a href="#">{{ data.file_name }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+
+  <h3>Translate</h3>
+  <table class="table table-bordered">
+  	<thead>
+  		<tr>
+  			<th>Question</th>
+  			<th>Your Answer</th>
+        <th>Correct Answer</th>
+        <th>#</th>
+  		</tr>
+  	</thead>
+  	<tbody id="q">
+  	</tbody>
+  </table>
+  <button class="btn btn-info pull-right" id="answer">算分數</button>
+</div>
+{% endblock %}
+
+{% block script %}
+  <script>
+  	$(document).ready(function(){
+  	  var arr = [] ;
+      var data_id = "{{ datas[0].id }}" ;
+
+  		call_data(data_id) ;
+
+      $('.data-select').click(function(){
+        data_id = $(this).attr('data-val') ;
+        $('#q').html("") ;
+        call_data(data_id) ;
+      }) ;
+
+  		$('#answer').click(function(){
+        $.ajax({
+          url: '/vocabulary/a/' + data_id,
+          dataType: 'json'
+        })
+        .done(function(data){
+          grade = 0 ;
+
+          $('input[name="data[]"]').each(function(){
+            for (var i = 0 ; i < data.length ; i++)
+            {
+              $($('.cans')[i]).text(data[i]) ;
+              $($('.vans i')[i]).removeClass('hide') ;
+              if (data[i] == $(this).val().trim())
+              {
+                grade += (data.length / 100) ;
+                $($('.vans i')[i]).removeClass('glyphicon-remove').addClass('glyphicon-ok').css('color', 'green') ;
+              }
+            }
+          })
+          swal("Good job!", "You get " + grade + " / 100 points", "success")
+        })
+  		})
+  	}) ;
+
+    function call_data(data_id) {
+      $.ajax({
+        url: '/vocabulary/q/' + data_id,
+        dataType: 'json'
+      })
+      .done(function(data){
+        for (d in data) {
+          tr = $('<tr />') ;
+          td_q = $('<td />').text(data[d]) ;
+          td_a = $('<td />').addClass('ans') ;
+          td_t = $('<input type="text" />').addClass('form-control').attr('name', 'data[]');
+          td_ca = $('<td />').addClass('cans') ;
+          td_verify = $('<td />').addClass('vans').append($('<i />').addClass('glyphicon glyphicon-remove hide').css('color', 'red'));
+          $('#q').append(tr.append(td_q).append(td_a.append(td_t)).append(td_ca).append(td_verify)) ;
+        }
+      }) ;
+    }
+  </script>
+{% endblock %}
