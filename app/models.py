@@ -1,7 +1,8 @@
-#/usr/bin/env python
+# /usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from app import db
+
 
 class Vocabulary(db.Model):
 	__tablename__ = 'vocabulary'
