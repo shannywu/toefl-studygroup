@@ -33,7 +33,11 @@
             <li class=""><a href="#">Speaking</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Login</a></li>
+          {% if not session.logged_in %}
+            <li><a href="{{ url_for('login.fb_login') }}">Login</a></li>
+          {% else %}
+            <li><a href="#">{{ session.name }}</a></li>
+          {% endif %}
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
