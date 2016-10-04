@@ -29,3 +29,4 @@ def vocabulary(data_type, id):
             json_data = [d[1] for d in json_data]
 
         return jsonify(json_data)
+        
