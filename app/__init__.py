@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from flask_oauth import OAuth
 import config
 
@@ -16,7 +16,8 @@ db = SQLAlchemy(app)
 
 # Facebook Oauth
 oauth = OAuth()
-facebook = oauth.remote_app('facebook',
+facebook = oauth.remote_app(
+    'facebook',
     base_url='https://graph.facebook.com/',
     request_token_url=None,
     access_token_url='/oauth/access_token',
@@ -27,7 +28,6 @@ facebook = oauth.remote_app('facebook',
 )
 
 # blueprints
-
 from views.home import home
 from views.login import login
 
