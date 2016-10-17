@@ -3,7 +3,6 @@
 
 from flask import Blueprint, render_template, jsonify, request
 from app.models import Vocabulary
-from app import db
 from os import path
 import json
 
@@ -29,4 +28,3 @@ def vocabulary(data_type, id):
             json_data = [d[1] for d in json_data]
 
         return jsonify(json_data)
-        

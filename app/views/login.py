@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Blueprint, render_template, jsonify, request, url_for, session, redirect
+from flask import Blueprint, request, url_for, session, redirect
 from app.models import User
 from app import db, facebook
-from os import path
-import json
 
 login = Blueprint('login', __name__, template_folder='templates', static_folder='static')
+
 
 @facebook.tokengetter
 def get_facebook_token():
     return session.get('facebook_token')
 
+
 @login.route('/login')
 def fb_login():
     return facebook.authorize(callback=url_for('login.facebook_authorized', next=request.args.get('next'), _external=True))
+
 
 @login.route("/facebook_authorized")
 @facebook.authorized_handler
